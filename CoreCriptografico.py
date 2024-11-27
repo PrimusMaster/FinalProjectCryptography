@@ -3,7 +3,8 @@ from Crypto.Util import number
 from Crypto.Hash import SHA256
 from Crypto.Cipher import AES
 from Crypto.Util.Padding import pad
-
+from Crypto.PublicKey import ECC
+from Signature import eddsa
 
 def Convert(location):
     with open(location,'r') as f:
@@ -32,10 +33,52 @@ def Convert(location):
     with open(Encryptedlocation, 'wb') as f:
         f.write(ED)
 
-    
+def ECDSA_keygeneration(Password):
+    mykey = ECC.generate(curve='p256')
+    pwd = Password.encode()
+    with open("myprivatekey.pem", "wt") as f:
+        data = mykey.export_key(format='PEM'
+                                    passphrase=pwd,
+                                    protection='PBKDF2WithHMAC-SHA512AndAES256-CBC',
+                                    prot_params={'iteration_count':131072})
+        f.write(data)
+    with open("mypublickey.pem", "wbt") as f:
+        data = mykey.public_key().export_key()
 
+def ECDSA_Signature(privatekeylocation,publickeylocation):
+    pwd = b'secret'
+    with open("myprivatekey.pem", "rt") as f:
+        data = f.read()
+        mykey = ECC.import_key(data, pwd)
+
+
+def ECDSA_Verification():
+    message = b'I give my permission to order #4355'
+    key = ECC.import_key(open('privkey.der').read())
+    h = SHA256.new(message)
+    signer = DSS.new(key, 'fips-186-3')
+    signature = signer.sign(h)
 
 def main():
+    print("Escoja alguna de las siguientes opciones:")
+    print(
+    """
+    1.-Encriptar con llave comun
+    2.-Encriptar con llave publica
+    4.-Desencriptar con llave privada
+    3.-Salir
+    """
+    )
+    opcion = input()
+    while True:
+        if opcion == "1":
+            print("ingrese el nombre del archivo:")
+            Direccion = input()
+            Convert(Direccion) 
+        elif opcion == "2":
+
+
+
 
 
 if ___name___ == '___main___':
