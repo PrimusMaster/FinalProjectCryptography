@@ -4,7 +4,7 @@ from Crypto.Hash import SHA256
 from Crypto.Cipher import AES
 from Crypto.Util.Padding import pad
 from Crypto.PublicKey import ECC
-from Signature import eddsa
+from Crypto.Signature import DSS
 
 def Convert(location):
     with open(location,'r') as f:
@@ -37,49 +37,77 @@ def ECDSA_keygeneration(Password):
     mykey = ECC.generate(curve='p256')
     pwd = Password.encode()
     with open("myprivatekey.pem", "wt") as f:
-        data = mykey.export_key(format='PEM'
-                                    passphrase=pwd,
-                                    protection='PBKDF2WithHMAC-SHA512AndAES256-CBC',
-                                    prot_params={'iteration_count':131072})
+        data = mykey.export_key(format='PEM',
+                                passphrase=pwd,
+                                protection='PBKDF2WithHMAC-SHA512AndAES256-CBC',
+                                prot_params={'iteration_count':131072})
         f.write(data)
-    with open("mypublickey.pem", "wbt") as f:
-        data = mykey.public_key().export_key()
+    with open("mypublickey.pem", "wt") as f:
+        data = mykey.public_key().export_key(format='PEM')
+        f.write(data)
 
-def ECDSA_Signature(privatekeylocation,publickeylocation):
-    pwd = b'secret'
-    with open("myprivatekey.pem", "rt") as f:
+def ECDSA_Signature(Password,privatekeylocation,documentlocation):
+    pwd = Password.encode()
+    with open(privatekeylocation, "rt") as f:
         data = f.read()
         mykey = ECC.import_key(data, pwd)
+    with open(documentlocation,"rb") as f:
+        infoToSign =  f.read()
+        h = SHA256.new(infoToSign)
+    signer = DSS.new(mykey, 'fips-186-3')
+    firma = signer.sign(h)
+    firma64 = base64.b64encode(firma)
+    with open("Firma.txt","wb") as f:
+        f.write(firma64)
+    
+    
 
-
-def ECDSA_Verification():
-    message = b'I give my permission to order #4355'
-    key = ECC.import_key(open('privkey.der').read())
-    h = SHA256.new(message)
-    signer = DSS.new(key, 'fips-186-3')
-    signature = signer.sign(h)
+def ECDSA_Verification(publickeylocation,documentlocation,signaturelocation):
+    key = ECC.import_key(open(publickeylocation).read())
+    with open(documentlocation,"rb") as f:
+        infoToSign =  f.read()
+        h = SHA256.new(infoToSign)
+    verifier = DSS.new(key, 'fips-186-3')
+    with open(signaturelocation,"rb") as f:
+        signature = f.read()
+        signature = base64.b64decode(signature)
+    try:
+        verifier.verify(h, signature)
+        print("The message is authentic.")
+    except ValueError:
+        print("The message is not authentic.")
 
 def main():
-    print("Escoja alguna de las siguientes opciones:")
-    print(
-    """
-    1.-Encriptar con llave comun
-    2.-Encriptar con llave publica
-    4.-Desencriptar con llave privada
-    3.-Salir
-    """
-    )
-    opcion = input()
+    
     while True:
+        print("Escoja alguna de las siguientes opciones:")
+        print(
+        """
+        1.-Crear llaves
+        2.-Firmar documento
+        3.-Verificar firma
+        5.-Salir
+        
+        """
+        )
+        opcion = input()
+
         if opcion == "1":
-            print("ingrese el nombre del archivo:")
-            Direccion = input()
-            Convert(Direccion) 
+            print("ingrese una contraseña:")
+            Password = input()
+            ECDSA_keygeneration(Password) 
         elif opcion == "2":
+            print("ingrese la contraseña:")
+            Password = input()
+            ECDSA_Signature(Password,"myprivatekey.pem","Prueba.txt")
+        elif opcion == "3":
+            ECDSA_Verification("mypublickey.pem","Prueba.txt","Firma.txt")
+        elif opcion == "5":
+            break
 
 
 
 
 
-if ___name___ == '___main___':
+if __name__ == '__main__':
     main()
