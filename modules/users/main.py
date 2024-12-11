@@ -13,16 +13,22 @@ root.title("Gogle")
 root.resizable(False, False)
 frame = Frame(root)
 
+users = User()
 
 
 def generate_intro():
     frame = Frame(root)
     LabelIntro = Label(frame,text="Bienvenido, las operaciones disponibles son:")
     Button_Register = Button(frame,text="Registrarse",command=lambda:generate_Register(frame))
+    #Button_Login = Button(frame,text="Login",command=lambda:generate_Login(frame))
 
 
+
+    LabelIntro.grid(row=0,column=0)
+    Button_Register.grid(row=1,column=0)
 
     frame.pack()
+
 
 def generate_Register(fram):
     global txtUsername
@@ -64,14 +70,23 @@ def generate_Register(fram):
     frameR.pack()
 
 def register(fram):
-    fram.destroy()
+    
     Username = txtUsername.get(1.0,END)
     Password = txtPassword.get(1.0,END)
     Mail = txtMail.get(1.0,END)
     Age = txtAge.get(1.0,END)
     Area = txtArea.get(1.0,END)
+
+
+    fram.destroy()
     
-    create
+    
+    users.create_user(Username,Password,Mail,Area,Age)
+
+    users.view_users()
+
+    generate_intro()
+
     
 """
 
