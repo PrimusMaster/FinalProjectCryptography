@@ -1,5 +1,6 @@
 import socket
 import sys
+from engine import *
 from tkinter import *
 from PIL import ImageTk, Image
 import os
@@ -14,16 +15,6 @@ frame = Frame(root)
 
 
 
-
-timeout = 3
-
-
-minBuf = 1
-
-RootPath = os.path.dirname(__file__)
-RootPath += "/C_Archivos/"
-
-
 def generate_intro():
     frame = Frame(root)
     LabelIntro = Label(frame,text="Bienvenido, las operaciones disponibles son:")
@@ -36,6 +27,9 @@ def generate_intro():
 def generate_Register(fram):
     global txtUsername
     global txtPassword
+    global txtAge
+    global txtArea
+    global txtMail
     
     frameR = Frame(root)
     fram.destroy()
@@ -44,13 +38,28 @@ def generate_Register(fram):
     txtUsername = Text(frameR,width=15,height=1)
     txtLabelPassword = Label(frameR,text="Ingresa una contraseña:")
     txtPassword = Text(frameR,width=15,height=1)
+    txtLabelMail = Label(frameR,text="Ingresa un email:")
+    txtMail = Text(frameR,width=15,height=1)
+    txtLabelArea = Label(frameR,text="Ingresa el area a la que perteneces:")
+    txtArea = Text(frameR,width=15,height=1)
+    txtLabelAge = Label(frameR,text="Ingresa tu edad:")
+    txtAge = Text(frameR,width=15,height=1)
+
+
     RegisterButton = Button(frameR,text="Register",command=lambda:register(frameR))
     
     txtLabelUsername.grid(row=0,column=0)
-    txtUsername.grid(row=1,column=0)
-    txtLabelPassword.grid(row=2,column=0)
-    txtPassword.grid(row=3,column=0)
-    RegisterButton.grid(row=4,column=0)
+    txtUsername.grid(row=0,column=1)
+    txtLabelPassword.grid(row=1,column=0)
+    txtPassword.grid(row=1,column=1)
+    txtLabelMail.grid(row=2,column=0)
+    txtMail.grid(row=2,column=1)
+    txtLabelArea.grid(row=3,column=0)
+    txtArea.grid(row=3,column=1)
+    txtLabelAge.grid(row=4,column=0)
+    txtAge.grid(row=4,column=1)
+
+    RegisterButton.grid(row=5,column=0,columnspan=2)
 
     frameR.pack()
 
@@ -58,7 +67,11 @@ def register(fram):
     fram.destroy()
     Username = txtUsername.get(1.0,END)
     Password = txtPassword.get(1.0,END)
+    Mail = txtMail.get(1.0,END)
+    Age = txtAge.get(1.0,END)
+    Area = txtArea.get(1.0,END)
     
+    create
     
 """
 
