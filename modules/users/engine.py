@@ -1,6 +1,7 @@
 from sqlalchemy import create_engine, Column, Integer, String
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
+from core import CoreCriptografico
 import bcrypt
 
 # Configuración de la base de datos SQLite (archivo local)
@@ -47,6 +48,18 @@ class User(Base):
         session.commit()
         print("Usuario creado con exito")
         session.close()
+
+    def login(self,Username,password) :
+        Session = sessionmaker(bind=engine)
+        session = Session()
+        usuario = session.query(User).filter_by(name = Username).one_or_none()
+        if usuario.password == CoreCriptografico.HASH(password):
+            self.name = usuario.name
+            self.age = usuario.age
+            self.area = usuario.area
+            return self
+        else: 
+            return 0
 
     def view_users(self):
         Session = sessionmaker(bind=engine)

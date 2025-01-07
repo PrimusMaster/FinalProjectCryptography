@@ -77,10 +77,10 @@ def ECDSA_Verification(publickeylocation,documentlocation,signaturelocation):
     except ValueError:
         print("The message is not authentic.")
 
-def HASH(Text):
+def HASH(Text: str):
     hash = SHA256.new()
-    result = hash.update(Text)
-    return result
+    result = hash.update(base64.b64encode(Text.encode()))
+    return base64.b64decode(result).decode()
 
 
 def main():

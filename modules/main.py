@@ -1,6 +1,6 @@
 import socket
 import sys
-from engine import *
+from users.engine import *
 from tkinter import *
 from PIL import ImageTk, Image
 import os
@@ -20,14 +20,16 @@ def generate_intro():
     frame = Frame(root)
     LabelIntro = Label(frame,text="Bienvenido, las operaciones disponibles son:")
     Button_Register = Button(frame,text="Registrarse",command=lambda:generate_Register(frame))
-    #Button_Login = Button(frame,text="Login",command=lambda:generate_Login(frame))
+    Button_Login = Button(frame,text="Login",command=lambda:generate_Login(frame))
 
 
 
     LabelIntro.grid(row=0,column=0)
     Button_Register.grid(row=1,column=0)
+    Button_Login.grid(row=2,column=0)
 
     frame.pack()
+
 
 
 def generate_Register(fram):
@@ -87,7 +89,63 @@ def register(fram):
 
     generate_intro()
 
+def generate_Login(fram):
+    global txtUsername
+    global txtPassword
+    global txtAge
+    global txtArea
+    global txtMail
     
+    frameL = Frame(root)
+    fram.destroy()
+
+    txtLabelUsername = Label(frameL,text="Ingresa un nombre de usuario:")
+    txtUsername = Text(frameL,width=15,height=1)
+    txtLabelPassword = Label(frameL,text="Ingresa una contraseña:")
+    txtPassword = Text(frameL,width=15,height=1)
+
+
+
+    LoginButton = Button(frameL,text="Login",command=lambda:login(frameL))
+    
+    txtLabelUsername.grid(row=0,column=0)
+    txtUsername.grid(row=0,column=1)
+    txtLabelPassword.grid(row=1,column=0)
+    txtPassword.grid(row=1,column=1)
+
+
+    LoginButton.grid(row=2,column=0,columnspan=2)
+
+    frameL.pack()
+
+
+def login(fram):
+    global txtUsername
+    global txtPassword
+        
+    global Username
+    global Password
+    global Age
+    global Area
+    global Mail
+
+    Username = txtUsername.get(1.0,END)
+    Password = txtPassword.get(1.0,END)
+
+    user = users.login(Username,Password)
+    if user != 0:
+        Age = user.age
+        Area = user.area
+        Mail = user.mail
+
+
+    fram.destroy()
+
+
+
+
+
+
 """
 
 def Operations():
