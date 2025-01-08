@@ -1,4 +1,5 @@
 import base64
+import os
 from Crypto.Util import number
 from Crypto.Hash import SHA256
 from Crypto.Cipher import AES
@@ -6,7 +7,7 @@ from Crypto.Util.Padding import pad
 from Crypto.PublicKey import ECC
 from Crypto.Signature import DSS
 
-def Convert(location):
+def Convert(location,cloud):
     with open(location,'r') as f:
         data_key = f.read(70)
         
@@ -29,8 +30,12 @@ def Convert(location):
 
     EnD = cipher.encrypt(data)
 
-    Encryptedlocation = location.split(".")[0]
+    Encryptedlocation = os.path.basename(location)
+    
+    Encryptedlocation = Encryptedlocation[1].split(".")[0]
     Encryptedlocation = Encryptedlocation + "Encrypted.pem"
+
+    Encryptedlocation = os.path.join(cloud,Encryptedlocation)
 
     EnD = base64.b64encode(EnD)
 
@@ -62,9 +67,12 @@ def convert_decrypt(location, location_encrypted):
 
     DeD = cipher.decrypt(data)
 
-    Encryptedlocation = location.split(".")
-    Encryptedlocation = Encryptedlocation[0] + "_Decrypted" + Encryptedlocation[1]
+    HT = os.path.basename(location)
+
+    Encryptedlocation = HT[1].split(".")
+    Encryptedlocation = Encryptedlocation[0] + "_Decrypted."+ Encryptedlocation[1]
     
+    Encryptedlocation = os.path.join(HT[0],Encryptedlocation)
 
     with open(Encryptedlocation, 'w') as f:
         f.write(DeD)
@@ -117,8 +125,8 @@ def ECDSA_Verification(publickeylocation,documentlocation,signaturelocation):
 
 def HASH(Text: str):
     hash = SHA256.new()
-    result = hash.update(base64.b64encode(Text.encode()))
-    return base64.b64decode(result).decode()
+    hash.update(base64.b64encode(Text.encode()))
+    return base64.b64encode(hash.digest()).decode("utf-8")
 
 
 def main():

@@ -3,13 +3,14 @@ import tkinter as tk
 from tkinter import ttk
 from tkinter.messagebox import showinfo
 from PIL import Image, ImageTk
-from modules.users.engine import *
+from engine import *
+from core.CoreCriptografico import *
 from tkinter import filedialog as fd
 
 
 user = User()
 
-RootPath = os.path.dirname(__file__)
+RootPath = "C:/Users/Daniel/Documents/GitHub/FinalProjectCryptography/modules/storage/filesusers"
 
 def user_interface(parent):
     def add_user():
@@ -116,18 +117,22 @@ def user_interface(parent):
     def upload_document():
         
         filetypes = (
-            ('text files', '*.txt'),
-            ('All files', '*.*')
+            ('All files', '*.*'),
+            ('text files', '*.txt')
         )
         filename = fd.askopenfilename(
             title='Open a file',
             initialdir=RootPath,
             filetypes=filetypes)
         
-        
+        Convert(filename,"storage/files/")
         
         #except:
         print("Ocurrio un error con el archivo escogido")
+
+    def download():
+        create_window_download()
+
 
 
     # Frame principal
@@ -143,15 +148,15 @@ def user_interface(parent):
     add_button = ttk.Button(frame, text="Subir archivo", command=upload_document)
     add_button.pack(pady=5)
 
-    update_button = ttk.Button(frame, text="Descargar archivo", command=update_user)
+    update_button = ttk.Button(frame, text="Descargar archivo", command=download)
     update_button.pack(pady=5)
-
-    delete_button = ttk.Button(frame, text="Firmar documento", command=delete_user)
+    """"
+    delete_button = ttk.Button(frame, text="Firmar documento", command=sign_document)
     delete_button.pack(pady=5)
 
-    view_button = ttk.Button(frame, text="Verificar firma", command=view_users)
+    view_button = ttk.Button(frame, text="Verificar firma", command=verify_signature)
     view_button.pack(pady=5)
-
+    """
     # Area de visualización de usuarios
     users_text = tk.Text(frame, height=10)
     users_text.pack(fill="x", pady=10)
@@ -173,6 +178,41 @@ def create_window_user():
     new_window.title("Operaciones")
     new_window.geometry("400x600")
     user_interface(new_window)
+
+def create_window_download():
+    new_window = tk.Toplevel(root)
+    new_window.title("Descargas")
+    new_window.geometry("400x600")
+    download_interface(new_window)
+
+def download_interface(parent):
+    # Frame principal
+    frame = ttk.Frame(parent, padding=10)
+    frame.pack(fill="both", expand=True)
+
+    # Título
+    title_label = ttk.Label(frame, text="Archivos disponibles:", font=("Helvetica", 16))
+    title_label.grid(row=0,column=0)
+
+    lista = os.listdir("storage/files/")
+
+    for x in range(lista.__len__()):
+        lista[x]
+
+        download_label = ttk.Label(frame, text=lista[x])
+        download_label.grid(row=x+1,column=0)
+        download_button= ttk.Button(frame,text="descargar",command=lambda c = x: download(lista[c]))
+        download_button.grid(row=x+1,column=1)
+
+def download(doc):
+    listaclean =  os.listdir(RootPath)
+    for x in range(listaclean.__len__()):
+        if str.__contains__(listaclean[x],str.replace(doc,"Encrypted.pem","")):
+            clean = listaclean[x]
+    direction = os.path.join(RootPath,clean)
+    encripdir = os.path.join("C:/Users/Daniel/Documents/GitHub/FinalProjectCryptography/modules/storage/files",doc)
+    convert_decrypt(direction,encripdir)
+
 
 def login_action():
     username = username_entry.get()
