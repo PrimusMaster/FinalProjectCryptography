@@ -88,5 +88,10 @@ class User(Base):
         session.close()
 
         if user and bcrypt.checkpw(password.encode('utf-8'), user.password.encode('utf-8')):
+            self.name = username
+            self.age = user.age
+            self.area = user.area
+            self.mail = user.mail
+            self.id = user.id
             return True
         return False

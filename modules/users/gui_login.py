@@ -110,7 +110,7 @@ def user_interface(parent):
 def create_window():
     new_window = tk.Toplevel(root)
     new_window.title("Gestión de Usuarios")
-    new_window.geometry("400x600")
+    new_window.geometry("400x900")
     user_interface(new_window)
 
 def login_action():
@@ -121,7 +121,7 @@ def login_action():
         showinfo("Login exitoso", "Bienvenido, Admin!")
         create_window()  # Abrir la ventana de gestión de usuarios
     elif user.validate_user(username, password):
-        showinfo("Login exitoso", f"Bienvenido, {username}!")
+        showinfo("Login exitoso", f"Bienvenido, {user.name}!")
         create_window()  # Abrir la ventana de gestión de usuarios
     else:
         showinfo("Error", "Usuario o contraseña incorrectos")
