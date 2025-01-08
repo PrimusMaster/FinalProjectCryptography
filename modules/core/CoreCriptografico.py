@@ -83,6 +83,42 @@ def HASH(Text: str):
     return base64.b64decode(result).decode()
 
 
+import hashlib
+from Crypto.Cipher import AES
+import os
+
+def generate_key(file_path):
+    """Genera una clave a partir del contenido del archivo."""
+    with open(file_path, 'rb') as f:
+        file_data = f.read()
+    return hashlib.sha256(file_data).digest()
+"""
+def encrypt_file(file_path, output_path):
+    
+    key = generate_key(file_path)
+    cipher = AES.new(key, AES.MODE_EAX)
+    with open(file_path, 'rb') as f:
+        plaintext = f.read()
+    ciphertext, tag = cipher.encrypt_and_digest(plaintext)
+    with open(output_path, 'wb') as f:
+        f.write(cipher.nonce + tag + ciphertext)
+
+def decrypt_file(file_path, output_path):
+   
+    with open(file_path, 'rb') as f:
+        nonce, tag, ciphertext = f.read(16), f.read(16), f.read()
+    key = generate_key(file_path)
+    cipher = AES.new(key, AES.MODE_EAX, nonce=nonce)
+    plaintext = cipher.decrypt_and_verify(ciphertext, tag)
+    with open(output_path, 'wb') as f:
+        f.write(plaintext)
+
+
+"""
+
+
+
+
 def main():
     
     while True:

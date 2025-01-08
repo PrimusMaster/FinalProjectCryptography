@@ -1,175 +1,224 @@
-import socket
-import sys
-from users.engine import *
-from tkinter import *
-from PIL import ImageTk, Image
 import os
-from sys import byteorder
-from tkinter import filedialog as fd
+import sqlite3
+from tkinter import *
+from tkinter import messagebox
+from storage import *
+from  storage.file_manager import *
+from  storage.encryption import *
+# Crear base de datos para usuarios
+DB_PATH = "users.db"
 
-root = Tk()
+if not os.path.exists(DB_PATH):
+    with sqlite3.connect(DB_PATH) as conn:
+        cursor = conn.cursor()
+        cursor.execute("""
+        CREATE TABLE users (
+            username TEXT PRIMARY KEY,
+            password TEXT
+        )
+        """)
+        conn.commit()
 
-root.title("Gogle")
-root.resizable(False, False)
-frame = Frame(root)
+def decrypt_document(frame):
+    frame.destroy()
+    frameDecrypt = Frame(root)
 
-users = User()
+    Label(frameDecrypt, text="Ruta del archivo cifrado:").grid(row=0, column=0)
+    encryptedFileEntry = Entry(frameDecrypt, width=30)
+    encryptedFileEntry.grid(row=0, column=1)
+
+    Label(frameDecrypt, text="Ruta del archivo original (para clave):").grid(row=1, column=0)
+    originalFileEntry = Entry(frameDecrypt, width=30)
+    originalFileEntry.grid(row=1, column=1)
+
+    def decrypt():
+        encrypted_path = encryptedFileEntry.get()
+        original_path = originalFileEntry.get()
+
+        if not os.path.exists(encrypted_path):
+            messagebox.showerror("Error", "El archivo cifrado no existe.")
+            return
+
+        if not os.path.exists(original_path):
+            messagebox.showerror("Error", "El archivo original no existe.")
+            return
+
+        response = decrypt_file(encrypted_path, original_path)
+        if response["success"]:
+            messagebox.showinfo("Éxito", f"Archivo descifrado correctamente: {response['path']}")
+            generate_Login(frameDecrypt)
+        else:
+            messagebox.showerror("Error", response["message"])
+
+    decryptButton = Button(frameDecrypt, text="Descifrar", command=decrypt)
+    decryptButton.grid(row=2, column=0, columnspan=2)
+
+    backButton = Button(frameDecrypt, text="Volver", command=lambda: generate_Login(frameDecrypt))
+    backButton.grid(row=3, column=0, columnspan=2)
+
+    frameDecrypt.pack()
 
 
-def generate_intro():
-    frame = Frame(root)
-    LabelIntro = Label(frame,text="Bienvenido, las operaciones disponibles son:")
-    Button_Register = Button(frame,text="Registrarse",command=lambda:generate_Register(frame))
-    Button_Login = Button(frame,text="Login",command=lambda:generate_Login(frame))
 
-
-
-    LabelIntro.grid(row=0,column=0)
-    Button_Register.grid(row=1,column=0)
-    Button_Login.grid(row=2,column=0)
-
-    frame.pack()
-
-
-
-def generate_Register(fram):
-    global txtUsername
-    global txtPassword
-    global txtAge
-    global txtArea
-    global txtMail
+# Función para mostrar archivos en la nube
+def show_cloud_files(frame):
+    frame.destroy()
+    frameCloud = Frame(root)
     
-    frameR = Frame(root)
-    fram.destroy()
-
-    txtLabelUsername = Label(frameR,text="Ingresa un nombre de usuario:")
-    txtUsername = Text(frameR,width=15,height=1)
-    txtLabelPassword = Label(frameR,text="Ingresa una contraseña:")
-    txtPassword = Text(frameR,width=15,height=1)
-    txtLabelMail = Label(frameR,text="Ingresa un email:")
-    txtMail = Text(frameR,width=15,height=1)
-    txtLabelArea = Label(frameR,text="Ingresa el area a la que perteneces:")
-    txtArea = Text(frameR,width=15,height=1)
-    txtLabelAge = Label(frameR,text="Ingresa tu edad:")
-    txtAge = Text(frameR,width=15,height=1)
-
-
-    RegisterButton = Button(frameR,text="Register",command=lambda:register(frameR))
+    # Listar archivos disponibles
+    files = list_files()
+    Label(frameCloud, text="Archivos disponibles en la nube:").grid(row=0, column=0, columnspan=2)
     
-    txtLabelUsername.grid(row=0,column=0)
-    txtUsername.grid(row=0,column=1)
-    txtLabelPassword.grid(row=1,column=0)
-    txtPassword.grid(row=1,column=1)
-    txtLabelMail.grid(row=2,column=0)
-    txtMail.grid(row=2,column=1)
-    txtLabelArea.grid(row=3,column=0)
-    txtArea.grid(row=3,column=1)
-    txtLabelAge.grid(row=4,column=0)
-    txtAge.grid(row=4,column=1)
-
-    RegisterButton.grid(row=5,column=0,columnspan=2)
-
-    frameR.pack()
-
-def register(fram):
+    for idx, file in enumerate(files):
+        Label(frameCloud, text=file).grid(row=idx+1, column=0)
     
-    Username = txtUsername.get(1.0,END)
-    Password = txtPassword.get(1.0,END)
-    Mail = txtMail.get(1.0,END)
-    Age = txtAge.get(1.0,END)
-    Area = txtArea.get(1.0,END)
-
-
-    fram.destroy()
+    # Botón para volver al login
+    backButton = Button(frameCloud, text="Volver", command=lambda: generate_Login(frameCloud))
+    backButton.grid(row=len(files)+1, column=0, columnspan=2)
     
+    frameCloud.pack()
+
+# Función para subir un archivo
+def upload_document(frame):
+    frame.destroy()
+    frameUpload = Frame(root)
+
+    Label(frameUpload, text="Ruta del archivo a subir:").grid(row=0, column=0)
+    filePathEntry = Entry(frameUpload, width=30)
+    filePathEntry.grid(row=0, column=1)
+
+    def upload():
+        file_path = filePathEntry.get()
+        if os.path.exists(file_path):
+            response = upload_file(file_path)
+            messagebox.showinfo("Subida", response["message"])
+            generate_Login(frameUpload)
+        else:
+            messagebox.showerror("Error", "El archivo no existe.")
+
+    uploadButton = Button(frameUpload, text="Subir", command=upload)
+    uploadButton.grid(row=1, column=0, columnspan=2)
+    frameUpload.pack()
+
+# Función para registrar un nuevo usuario
+def register_user(username, password):
+    with sqlite3.connect(DB_PATH) as conn:
+        cursor = conn.cursor()
+        try:
+            cursor.execute("INSERT INTO users (username, password) VALUES (?, ?)", (username, password))
+            conn.commit()
+            return {"success": True, "message": "Usuario registrado exitosamente."}
+        except sqlite3.IntegrityError:
+            return {"success": False, "message": "El nombre de usuario ya está registrado."}
+
+# Función para verificar credenciales
+def verify_user(username, password):
+    with sqlite3.connect(DB_PATH) as conn:
+        cursor = conn.cursor()
+        cursor.execute("SELECT password FROM users WHERE username = ?", (username,))
+        row = cursor.fetchone()
+        if row and row[0] == password:
+            return True
+        return False
+
+# Función para mostrar el registro
+def generate_Register(frame):
+    frame.destroy()
+    frameRegister = Frame(root)
     
-    users.create_user(Username,Password,Mail,Area,Age)
+    Label(frameRegister, text="Registrar Nuevo Usuario").grid(row=0, column=0, columnspan=2)
 
-    users.view_users()
+    Label(frameRegister, text="Nombre de Usuario:").grid(row=1, column=0)
+    usernameEntry = Entry(frameRegister)
+    usernameEntry.grid(row=1, column=1)
 
-    generate_intro()
+    Label(frameRegister, text="Contraseña:").grid(row=2, column=0)
+    passwordEntry = Entry(frameRegister, show="*")
+    passwordEntry.grid(row=2, column=1)
 
+    def register():
+        username = usernameEntry.get().strip()
+        password = passwordEntry.get().strip()
+
+        if not username or not password:
+            messagebox.showerror("Error", "Todos los campos son obligatorios.")
+            return
+
+        response = register_user(username, password)
+        if response["success"]:
+            messagebox.showinfo("Registro", response["message"])
+            generate_Login(frameRegister)
+        else:
+            messagebox.showerror("Error", response["message"])
+
+    registerButton = Button(frameRegister, text="Registrar", command=register)
+    registerButton.grid(row=3, column=0, columnspan=2)
+
+    backButton = Button(frameRegister, text="Volver", command=lambda: generate_MainMenu(frameRegister))
+    backButton.grid(row=4, column=0, columnspan=2)
+
+    frameRegister.pack()
+
+# Función de Login
+def login(frame):
+    username = txtUsername.get("1.0", "end").strip()
+    password = txtPassword.get("1.0", "end").strip()
+    
+    if verify_user(username, password):
+        messagebox.showinfo("Login", "Bienvenido, " + username)
+        frame.destroy()
+        frameMenu = Frame(root)
+
+        # Opciones después del login
+        Label(frameMenu, text="Opciones disponibles:").grid(row=0, column=0, columnspan=2)
+
+        Button(frameMenu, text="Subir Archivo", command=lambda: upload_document(frameMenu)).grid(row=1, column=0, columnspan=2)
+        Button(frameMenu, text="Ver Archivos en la Nube", command=lambda: show_cloud_files(frameMenu)).grid(row=2, column=0, columnspan=2)
+        Button(frameMenu, text="Descifrar Archivo", command=lambda: decrypt_document(frameMenu)).grid(row=3, column=0, columnspan=2)
+
+        frameMenu.pack()
+    else:
+        messagebox.showerror("Error", "Credenciales incorrectas.")
+
+# Generar interfaz de Login
 def generate_Login(fram):
-    global txtUsername
-    global txtPassword
-    global txtAge
-    global txtArea
-    global txtMail
-    
+    global txtUsername, txtPassword
     frameL = Frame(root)
     fram.destroy()
 
-    txtLabelUsername = Label(frameL,text="Ingresa un nombre de usuario:")
-    txtUsername = Text(frameL,width=15,height=1)
-    txtLabelPassword = Label(frameL,text="Ingresa una contraseña:")
-    txtPassword = Text(frameL,width=15,height=1)
+    txtLabelUsername = Label(frameL, text="Ingresa un nombre de usuario:")
+    txtUsername = Text(frameL, width=15, height=1)
+    txtLabelPassword = Label(frameL, text="Ingresa una contraseña:")
+    txtPassword = Text(frameL, width=15, height=1)
 
+    LoginButton = Button(frameL, text="Login", command=lambda: login(frameL))
 
+    txtLabelUsername.grid(row=0, column=0)
+    txtUsername.grid(row=0, column=1)
+    txtLabelPassword.grid(row=1, column=0)
+    txtPassword.grid(row=1, column=1)
 
-    LoginButton = Button(frameL,text="Login",command=lambda:login(frameL))
-    
-    txtLabelUsername.grid(row=0,column=0)
-    txtUsername.grid(row=0,column=1)
-    txtLabelPassword.grid(row=1,column=0)
-    txtPassword.grid(row=1,column=1)
+    LoginButton.grid(row=2, column=0, columnspan=2)
 
-
-    LoginButton.grid(row=2,column=0,columnspan=2)
+    backButton = Button(frameL, text="Volver", command=lambda: generate_MainMenu(frameL))
+    backButton.grid(row=3, column=0, columnspan=2)
 
     frameL.pack()
 
+# Generar menú principal (Inicio)
+def generate_MainMenu(frame):
+    frame.destroy()
+    frameMain = Frame(root)
+    
+    Label(frameMain, text="Bienvenido al Sistema").grid(row=0, column=0, columnspan=2)
 
-def login(fram):
-    global txtUsername
-    global txtPassword
-        
-    global Username
-    global Password
-    global Age
-    global Area
-    global Mail
+    Button(frameMain, text="Iniciar Sesión", command=lambda: generate_Login(frameMain)).grid(row=1, column=0, columnspan=2)
+    Button(frameMain, text="Registrarse", command=lambda: generate_Register(frameMain)).grid(row=2, column=0, columnspan=2)
 
-    Username = txtUsername.get(1.0,END)
-    Password = txtPassword.get(1.0,END)
+    frameMain.pack()
 
-    user = users.login(Username,Password)
-    if user != 0:
-        Age = user.age
-        Area = user.area
-        Mail = user.mail
-
-
-    fram.destroy()
-
-
-
-
-
-
-"""
-
-def Operations():
-	OperationFrame = Frame(root)
-	label_comand = Label(OperationFrame,text="Las operaciones disponibles son:")
-	button_Upload = Button(OperationFrame,text="Subir archivo",command=lambda:select_file())
-	button_Download = Button(OperationFrame,text="Descargar archivo",command=lambda: Download_Frame(OperationFrame))
-	button_CreateDirectory = Button(OperationFrame,text="Crear carpeta",command=lambda:Directory_Frame(OperationFrame))
-	button_Delete = Button(OperationFrame, text="Eliminar archivo/directorio",command=lambda:Delete_Frame(OperationFrame))
-	button_Rename = Button(OperationFrame,text="Cambiar nombre",command=lambda:Rename_Frame(OperationFrame))
-	label_comand.grid(row=0,column=0)
-	button_Upload.grid(row=1,column=0)
-	button_Download.grid(row=2,column=0)
-	button_CreateDirectory.grid(row=3,column=0)
-	button_Delete.grid(row=4,column=0)
-	button_Rename.grid(row=5,column=0)
-	OperationFrame.pack()
-
-"""
-
-def main():
-	generate_intro()
-	mainloop()
-
-
-if __name__ == '__main__':
-	main()
+# Configuración inicial de la ventana
+root = Tk()
+root.title("Sistema de Deduplicación Segura")
+generate_MainMenu(Frame(root))
+root.mainloop()

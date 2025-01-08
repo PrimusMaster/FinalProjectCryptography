@@ -1,0 +1,122 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "C:\\Users\\Daniel\\Documents\\GitHub\\FinalProjectCryptography\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\Daniel\\Documents\\GitHub\\FinalProjectCryptography\\modules\\main.py||{8B382828-6202-11D1-8870-0000F87579D2}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:modules\\main.py||{8B382828-6202-11D1-8870-0000F87579D2}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\Daniel\\Documents\\GitHub\\FinalProjectCryptography\\modules\\storage\\file_manager.py||{8B382828-6202-11D1-8870-0000F87579D2}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:modules\\storage\\file_manager.py||{8B382828-6202-11D1-8870-0000F87579D2}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\Daniel\\Documents\\GitHub\\FinalProjectCryptography\\modules\\users\\engine.py||{8B382828-6202-11D1-8870-0000F87579D2}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:modules\\users\\engine.py||{8B382828-6202-11D1-8870-0000F87579D2}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\Daniel\\Documents\\GitHub\\FinalProjectCryptography\\modules\\core\\CoreCriptografico.py||{8B382828-6202-11D1-8870-0000F87579D2}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:modules\\core\\CoreCriptografico.py||{8B382828-6202-11D1-8870-0000F87579D2}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\Daniel\\Documents\\GitHub\\FinalProjectCryptography\\CoreCriptografico.py||{8B382828-6202-11D1-8870-0000F87579D2}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:CoreCriptografico.py||{8B382828-6202-11D1-8870-0000F87579D2}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\Daniel\\Documents\\GitHub\\FinalProjectCryptography\\modules\\core\\main.py||{8B382828-6202-11D1-8870-0000F87579D2}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:modules\\core\\main.py||{8B382828-6202-11D1-8870-0000F87579D2}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 3,
+          "Children": [
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{f5cd1b51-c771-5648-966f-646d419b1e7c}"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "file_manager.py",
+              "DocumentMoniker": "C:\\Users\\Daniel\\Documents\\GitHub\\FinalProjectCryptography\\modules\\storage\\file_manager.py",
+              "RelativeDocumentMoniker": "modules\\storage\\file_manager.py",
+              "ToolTip": "C:\\Users\\Daniel\\Documents\\GitHub\\FinalProjectCryptography\\modules\\storage\\file_manager.py",
+              "RelativeToolTip": "modules\\storage\\file_manager.py",
+              "ViewState": "AgIAACoAAAAAAAAAAAAAADoAAAAQAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.002457|",
+              "WhenOpened": "2025-01-07T22:53:04.1Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "CoreCriptografico.py",
+              "DocumentMoniker": "C:\\Users\\Daniel\\Documents\\GitHub\\FinalProjectCryptography\\modules\\core\\CoreCriptografico.py",
+              "RelativeDocumentMoniker": "modules\\core\\CoreCriptografico.py",
+              "ToolTip": "C:\\Users\\Daniel\\Documents\\GitHub\\FinalProjectCryptography\\modules\\core\\CoreCriptografico.py",
+              "RelativeToolTip": "modules\\core\\CoreCriptografico.py",
+              "ViewState": "AgIAAFwAAAAAAAAAAAAowF0AAAAtAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.002457|",
+              "WhenOpened": "2025-01-07T22:51:53.883Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "main.py",
+              "DocumentMoniker": "C:\\Users\\Daniel\\Documents\\GitHub\\FinalProjectCryptography\\modules\\main.py",
+              "RelativeDocumentMoniker": "modules\\main.py",
+              "ToolTip": "C:\\Users\\Daniel\\Documents\\GitHub\\FinalProjectCryptography\\modules\\main.py",
+              "RelativeToolTip": "modules\\main.py",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAHMAAAAPAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.002457|",
+              "WhenOpened": "2025-01-07T22:48:02.997Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "CoreCriptografico.py",
+              "DocumentMoniker": "C:\\Users\\Daniel\\Documents\\GitHub\\FinalProjectCryptography\\CoreCriptografico.py",
+              "RelativeDocumentMoniker": "CoreCriptografico.py",
+              "ToolTip": "C:\\Users\\Daniel\\Documents\\GitHub\\FinalProjectCryptography\\CoreCriptografico.py",
+              "RelativeToolTip": "CoreCriptografico.py",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.002457|",
+              "WhenOpened": "2025-01-06T20:36:55.748Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "engine.py",
+              "DocumentMoniker": "C:\\Users\\Daniel\\Documents\\GitHub\\FinalProjectCryptography\\modules\\users\\engine.py",
+              "RelativeDocumentMoniker": "modules\\users\\engine.py",
+              "ToolTip": "C:\\Users\\Daniel\\Documents\\GitHub\\FinalProjectCryptography\\modules\\users\\engine.py",
+              "RelativeToolTip": "modules\\users\\engine.py",
+              "ViewState": "AgIAAEUAAAAAAAAAAAAAABIAAAApAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.002457|",
+              "WhenOpened": "2025-01-06T20:17:26.667Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "main.py",
+              "DocumentMoniker": "C:\\Users\\Daniel\\Documents\\GitHub\\FinalProjectCryptography\\modules\\core\\main.py",
+              "RelativeDocumentMoniker": "modules\\core\\main.py",
+              "ToolTip": "C:\\Users\\Daniel\\Documents\\GitHub\\FinalProjectCryptography\\modules\\core\\main.py",
+              "RelativeToolTip": "modules\\core\\main.py",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.002457|",
+              "WhenOpened": "2025-01-06T20:17:09.764Z"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
