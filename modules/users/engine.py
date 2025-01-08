@@ -52,9 +52,8 @@ class User(Base):
         Session = sessionmaker(bind=engine)
         session = Session()
         usuarios = session.query(User).all()
-        for i in usuarios:
-            print(i)
         session.close()
+        return usuarios
 
     def update_user(self, user_id, **kwargs):
         Session = sessionmaker(bind=engine)
@@ -82,3 +81,12 @@ class User(Base):
             print(f"No se encontró el usuario con id={user_id}.")
         session.close()
 
+    def validate_user(self, username, password):
+        Session = sessionmaker(bind=engine)
+        session = Session()
+        user = session.query(User).filter_by(name=username).first()
+        session.close()
+
+        if user and bcrypt.checkpw(password.encode('utf-8'), user.password.encode('utf-8')):
+            return True
+        return False
