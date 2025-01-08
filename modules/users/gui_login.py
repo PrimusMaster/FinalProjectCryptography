@@ -1,10 +1,15 @@
+import os
 import tkinter as tk
 from tkinter import ttk
 from tkinter.messagebox import showinfo
 from PIL import Image, ImageTk
 from modules.users.engine import *
+from tkinter import filedialog as fd
+
 
 user = User()
+
+RootPath = os.path.dirname(__file__)
 
 def user_interface(parent):
     def add_user():
@@ -106,11 +111,67 @@ def user_interface(parent):
     status_label = ttk.Label(frame, text="", foreground="green")
     status_label.pack()
 
+
+def user_interface(parent):
+    def upload_document():
+        
+        filetypes = (
+            ('text files', '*.txt'),
+            ('All files', '*.*')
+        )
+        filename = fd.askopenfilename(
+            title='Open a file',
+            initialdir=RootPath,
+            filetypes=filetypes)
+        
+        
+        
+        #except:
+        print("Ocurrio un error con el archivo escogido")
+
+
+    # Frame principal
+    frame = ttk.Frame(parent, padding=10)
+    frame.pack(fill="both", expand=True)
+
+    # Título
+    title_label = ttk.Label(frame, text="Operaciones:", font=("Helvetica", 16))
+    title_label.pack(pady=10)
+
+    
+    # Botones para las operaciones
+    add_button = ttk.Button(frame, text="Subir archivo", command=upload_document)
+    add_button.pack(pady=5)
+
+    update_button = ttk.Button(frame, text="Descargar archivo", command=update_user)
+    update_button.pack(pady=5)
+
+    delete_button = ttk.Button(frame, text="Firmar documento", command=delete_user)
+    delete_button.pack(pady=5)
+
+    view_button = ttk.Button(frame, text="Verificar firma", command=view_users)
+    view_button.pack(pady=5)
+
+    # Area de visualización de usuarios
+    users_text = tk.Text(frame, height=10)
+    users_text.pack(fill="x", pady=10)
+
+    # Etiqueta de estado
+    status_label = ttk.Label(frame, text="", foreground="green")
+    status_label.pack()
+
+
 # Crear ventana secundaria
 def create_window():
     new_window = tk.Toplevel(root)
     new_window.title("Gestión de Usuarios")
     new_window.geometry("400x900")
+    user_interface(new_window)
+
+def create_window_user():
+    new_window = tk.Toplevel(root)
+    new_window.title("Operaciones")
+    new_window.geometry("400x600")
     user_interface(new_window)
 
 def login_action():
@@ -122,7 +183,7 @@ def login_action():
         create_window()  # Abrir la ventana de gestión de usuarios
     elif user.validate_user(username, password):
         showinfo("Login exitoso", f"Bienvenido, {user.name}!")
-        create_window()  # Abrir la ventana de gestión de usuarios
+        create_window_user()  # Abrir la ventana de un usuario normal
     else:
         showinfo("Error", "Usuario o contraseña incorrectos")
 

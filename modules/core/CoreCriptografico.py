@@ -8,30 +8,68 @@ from Crypto.Signature import DSS
 
 def Convert(location):
     with open(location,'r') as f:
-        data_key = f.read()
-        iv_data = data_key [:50]
+        data_key = f.read(70)
+        
 
     with open(location,'rb') as f:
         data = f.read()
 
     data_key = base64.b64encode(data_key)
-    iv_data = base64.b64encode(iv_data)
     hash = SHA256.new()
-    key = hash.update(data_key)
-    iv = hash.update(iv_data)
+    hash.update(data_key)
+    key = hash.digest()
+    hash = SHA256.new()
+    hash.update(key)
+    iv = hash.digest(key)
+    iv = iv[:128]
+
     AES.key_size = 256
 
-    cipher =  AES.new(key,mode= AES.MODE_CBC, IV= iv)
+    cipher = AES.new(key, AES.MODE_CBC, IV= iv)
+
+    EnD = cipher.encrypt(data)
 
     Encryptedlocation = location.split(".")[0]
     Encryptedlocation = Encryptedlocation + "Encrypted.pem"
 
-    ED = cipher.encrypt(pad(data, AES.block_size))
-
-    ED = base64.b64encode(ED).decode('utf-8')
+    EnD = base64.b64encode(EnD)
 
     with open(Encryptedlocation, 'wb') as f:
-        f.write(ED)
+        f.write(EnD)
+
+
+def convert_decrypt(location, location_encrypted):
+    with open(location,'r') as f:
+        data_key = f.read(70)
+    
+    with open(location_encrypted,'rb') as f:
+        data = f.read()
+        data = base64.b64decode(data)
+
+    data_key = base64.b64encode(data_key)
+    hash = SHA256.new()
+    hash.update(data_key)
+    key = hash.digest()
+    hash = SHA256.new()
+    hash.update(key)
+    iv = hash.digest(key)
+    iv = iv[:128]
+
+
+    AES.key_size = 256
+
+    cipher = AES.new(key, AES.MODE_CBC, IV= iv)
+
+    DeD = cipher.decrypt(data)
+
+    Encryptedlocation = location.split(".")
+    Encryptedlocation = Encryptedlocation[0] + "_Decrypted" + Encryptedlocation[1]
+    
+
+    with open(Encryptedlocation, 'w') as f:
+        f.write(DeD)
+
+
 
 def ECDSA_keygeneration(Password,username):
     mykey = ECC.generate(curve='p256')
