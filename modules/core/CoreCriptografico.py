@@ -33,10 +33,10 @@ def Convert(location):
     with open(Encryptedlocation, 'wb') as f:
         f.write(ED)
 
-def ECDSA_keygeneration(Password):
+def ECDSA_keygeneration(Password,username):
     mykey = ECC.generate(curve='p256')
     pwd = Password.encode()
-    with open("myprivatekey"++".pem", "wt") as f:
+    with open("myprivatekey"+username+".pem", "wt") as f:
         data = mykey.export_key(format='PEM',
                                 passphrase=pwd,
                                 protection='PBKDF2WithHMAC-SHA512AndAES256-CBC',
