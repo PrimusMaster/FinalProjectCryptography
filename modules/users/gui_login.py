@@ -29,7 +29,7 @@ title_label.pack(pady=10)
 
 # Espacio para imagen
 try:
-    image = Image.open("../../src/login.png").convert("RGBA")
+    image = Image.open("src/login.png").convert("RGBA")
     # Procesar fondo transparente
     datas = image.getdata()
     new_data = []
