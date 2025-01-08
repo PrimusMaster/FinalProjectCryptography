@@ -36,13 +36,13 @@ def Convert(location):
 def ECDSA_keygeneration(Password,username):
     mykey = ECC.generate(curve='p256')
     pwd = Password.encode()
-    with open("myprivatekey"+username+".pem", "wt") as f:
+    with open("../storage/users/myprivatekey"+username+".pem", "wt") as f:
         data = mykey.export_key(format='PEM',
                                 passphrase=pwd,
                                 protection='PBKDF2WithHMAC-SHA512AndAES256-CBC',
                                 prot_params={'iteration_count':131072})
         f.write(data)
-    with open("mypublickey.pem", "wt") as f:
+    with open("../storage/users/mypublickey"+username+".pem", "wt") as f:
         data = mykey.public_key().export_key(format='PEM')
         f.write(data)
 
@@ -65,7 +65,7 @@ def ECDSA_Signature(Password,privatekeylocation,documentlocation):
 def ECDSA_Verification(publickeylocation,documentlocation,signaturelocation):
     key = ECC.import_key(open(publickeylocation).read())
     with open(documentlocation,"rb") as f:
-        infoToSign =  f.read()
+        infoToSign = f.read()
         h = SHA256.new(infoToSign)
     verifier = DSS.new(key, 'fips-186-3')
     with open(signaturelocation,"rb") as f:
@@ -116,4 +116,5 @@ def main():
 
 
 if __name__ == '__main__':
-    main()
+    ECDSA_keygeneration("hola", "Pepe")
+    #main()
